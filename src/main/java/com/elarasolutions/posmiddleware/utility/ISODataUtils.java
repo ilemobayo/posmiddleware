@@ -36,8 +36,6 @@ public class ISODataUtils {
     }
 
     public POSData sendIsoRequest(POSDataPacked data) throws Exception {
-        String host = "arca-pos.qa.arca-payments.network";
-        int port = 11000;
         //NIBSS
 //        host = "196.6.103.72";
 //        port = 5042;
@@ -45,7 +43,7 @@ public class ISODataUtils {
         IsoMessage isoResponseMessage;
         try {
             //sendPingRequest(host);
-            isoResponseMessage = Transaction.sendRequest(host, port, true, dataBytes);
+            isoResponseMessage = Transaction.sendRequest(data.getHost(), data.getPort(), data.isSsl(), dataBytes);
             return buildISOJsonData(isoResponseMessage);
         } catch (Exception ex){
             ex.printStackTrace();
@@ -67,6 +65,7 @@ public class ISODataUtils {
 
     private POSData buildISOJsonData(IsoMessage message){
         POSData posData = new POSData();
+        posData.setMsgType(message.getIsoHeader());
         for (int i = 0; i <= 128; i++) {
             if (message.hasField(i)) {
                 if (i == 2) {

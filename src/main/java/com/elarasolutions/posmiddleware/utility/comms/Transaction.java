@@ -133,8 +133,7 @@ public class Transaction {
         }
         */
 
-        System.out.println("Response form Mock server: " + Arrays.toString(resp));
-        //IsoMessage isoMessageResponse = NIBSSTestSample.messageFactory.parseMessage(resp, 0);
+        System.out.println("Response form server: " + Arrays.toString(resp));
         IsoMessage isoMessageResponse = new Utils().decode(resp);
         System.out.println("Response: \n" + isoMessageResponse.debugString());
         return isoMessageResponse;
@@ -168,38 +167,5 @@ public class Transaction {
         System.arraycopy(A, 0, C, 0, aLen);
         System.arraycopy(B, 0, C, aLen, bLen);
         return C;
-    }
-
-    private static void resize(byte[] buffer) {
-        int m_Size = 2 * buffer.length;
-        int presentsize = buffer.length;
-        byte [] temp = buffer;
-        buffer  = new byte[m_Size];
-        for(int i=0 ; i<=presentsize-1; i++){
-            buffer[i] = temp[i];
-        }
-    }
-
-
-//    private static String readFile(String filename) throws IOException{
-//
-//        StringBuilder stanBuilder = new StringBuilder();
-//        File projectFile = NIBSSTestSample.getProjectFile(filename);
-//        try (FileReader reader = new FileReader(projectFile);
-//             BufferedReader br = new BufferedReader(reader)) {
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//                stanBuilder.append(line);
-//            }
-//        }
-//
-//        return stanBuilder.toString();
-//    }
-
-    private static void writeFile(String filename, String stan)throws IOException {
-//        File projectFile = NIBSSTestSample.getProjectFile(filename);
-//        try (PrintWriter writer = new PrintWriter(projectFile)) {
-//            writer.println(stan);
-//        }
     }
 }
