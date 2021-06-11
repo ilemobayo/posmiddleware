@@ -60,58 +60,6 @@ public class SocketConnectionImpl implements SocketConnection {
         }
     }
 
-//    public byte[] receive() throws ConnectException {
-//        try {
-//            InputStream is = this.socket.getInputStream();
-//            int total1;
-//                byte[] len1 = new byte[50];
-//                long buffer1 = System.currentTimeMillis();
-//
-//                while(is.available() < 2) {
-//                    if(this.isTimeout(buffer1, this.timeout * 1000)) {
-//                        throw new ConnectException(4, "Receiving timeout.");
-//                    }
-//
-//                    try {
-//                        Thread.sleep(100L);
-//                    } catch (InterruptedException var9) {
-//                        throw new ConnectException(5, "Receiving interrupt.");
-//                    }
-//                }
-//
-//                is.read(len1, 0, 2);
-//                int total = len1[0] << 8 & '\uff00' | len1[1] & 255;
-//                //DebugHelper.d("SocketConnection", "------ <recv> " + total + "(bytes) to receive ------");
-//                buffer1 = System.currentTimeMillis();
-//
-//                while(is.available() < total) {
-//                    if(this.isTimeout(buffer1, this.timeout * 1000)) {
-//                        if(is.available() > 0) {
-//                            len1 = new byte[is.available()];
-//                            is.read(len1);
-//                        }
-//
-//                        throw new ConnectException(4, "Receiving timeout.");
-//                    }
-//
-//                    try {
-//                        Thread.sleep(100L);
-//                    } catch (InterruptedException var8) {
-//                        throw new ConnectException(5, "Receiving interrupt.");
-//                    }
-//                }
-//
-//                len1 = new byte[total];
-//                total1 = is.read(len1);
-//                //DebugHelper.d("SocketConnection", "------ <recv> receive " + total1 + "(bytes) ------");
-//                //DebugHelper.dumpHex("<recv>", len1);
-//                return len1;
-//
-//        } catch (IOException var12) {
-//            throw new ConnectException(3, "Receiving IO error.");
-//        }
-//    }
-
     public byte[] receiveWithHeader() throws Exception {
         byte body[] = null;
         byte header[] = null;
@@ -156,7 +104,6 @@ public class SocketConnectionImpl implements SocketConnection {
 
             while(is.available() < 2) {
                 if(this.isTimeout(buffer1, this.timeout * 1000)) {
-
                     throw new ConnectException(4, "Receiving timeout.");
                 }
 
@@ -191,8 +138,10 @@ public class SocketConnectionImpl implements SocketConnection {
 
             len1 = new byte[total];
             total1 = is.read(len1);
+            System.out.println("SocketConnection: ------ <recv> receive " + total1 + "(bytes) ------");
+            System.out.println("SocketConnection: <recv> "+ len1);
             //DebugHelper.d("SocketConnection", "------ <recv> receive " + total1 + "(bytes) ------");
-            //DebugHelper.dumpHex("<recv>", len1);
+//            DebugHelper.dumpHex("<recv>", len1);
             return len1;
 
         } catch (IOException var12) {

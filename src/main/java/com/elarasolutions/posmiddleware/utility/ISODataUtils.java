@@ -1,9 +1,15 @@
 package com.elarasolutions.posmiddleware.utility;
 
 import com.elarasolutions.posmiddleware.model.POSData;
+import com.elarasolutions.posmiddleware.model.POSDataPacked;
+import com.elarasolutions.posmiddleware.utility.comms.Transaction;
 import com.elarasolutions.posmiddleware.utility.comms.tcp.TcpComms;
 import com.elarasolutions.posmiddleware.utility.comms.tcp.impl.TcpCommsImpl;
 import com.solab.iso8583.IsoMessage;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class ISODataUtils {
 
@@ -13,12 +19,50 @@ public class ISODataUtils {
     }
 
     public POSData sendIsoRequest(POSData data) throws Exception {
-        TcpComms comms = new TcpCommsImpl("196.6.103.72", 5042, 60, false, null);
+        String host = "arca-pos.qa.arca-payments.network";
+        int port = 11000;
+        //NIBSS
+//        host = "196.6.103.72";
+//        port = 5042;
+        // nc -vz arca-pos.qa.arca-payments.network 11000
+        // nc -vz 196.6.103.72 5042
         byte[] dataBytes = createRequest(data);
+        //sendPingRequest(host);
+        TcpComms comms = new TcpCommsImpl(host, port, 60, false, null);
         byte[] receiveData = comms.dataCommuBlocking(dataBytes);
         IsoMessage isoResponseMessage;
         isoResponseMessage = new Utils().decode(receiveData);
         return buildISOJsonData(isoResponseMessage);
+    }
+
+    public POSData sendIsoRequest(POSDataPacked data) throws Exception {
+        String host = "arca-pos.qa.arca-payments.network";
+        int port = 11000;
+        //NIBSS
+//        host = "196.6.103.72";
+//        port = 5042;
+        byte[] dataBytes = data.getMsg().getBytes();
+        IsoMessage isoResponseMessage;
+        try {
+            //sendPingRequest(host);
+            isoResponseMessage = Transaction.sendRequest(host, port, true, dataBytes);
+            return buildISOJsonData(isoResponseMessage);
+        } catch (Exception ex){
+            ex.printStackTrace();
+            return new POSData();
+        }
+    }
+
+    // Sends ping request to a provided IP address
+    public static void sendPingRequest(String ipAddress)
+            throws UnknownHostException, IOException
+    {
+        InetAddress geek = InetAddress.getByName(ipAddress);
+        System.out.println("Sending Ping Request to " + ipAddress);
+        if (geek.isReachable(5000))
+            System.out.println("Host is reachable");
+        else
+            System.out.println("Sorry ! We can't reach to this host");
     }
 
     private POSData buildISOJsonData(IsoMessage message){

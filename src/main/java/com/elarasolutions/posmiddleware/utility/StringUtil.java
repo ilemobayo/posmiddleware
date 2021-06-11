@@ -4,11 +4,7 @@ public class StringUtil {
 
     public static boolean isEmpty(String msg){
         boolean is;
-        if (msg != null&&!"".equals(msg)) {
-            is = false;
-        }else {
-            is = true;
-        }
+        is = (msg == null || msg.isEmpty());
         return is;
     }
 

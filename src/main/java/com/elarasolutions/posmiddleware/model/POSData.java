@@ -96,9 +96,18 @@ public class POSData {
     @SerializedName("field_55")
     @Expose
     private String field55;
+    @SerializedName("field_56")
+    @Expose
+    private String field56;
     @SerializedName("field_59")
     @Expose
     private String field59;
+    @SerializedName("field_60")
+    @Expose
+    private String field60;
+    @SerializedName("field_62")
+    @Expose
+    private String field62;
     @SerializedName("field_63")
     @Expose
     private String field63;
@@ -111,9 +120,15 @@ public class POSData {
     @SerializedName("field_95")
     @Expose
     private String field95;
+    @SerializedName("field_100")
+    @Expose
+    private String field100;
     @SerializedName("field_123")
     @Expose
     private String field123;
+    @SerializedName("field_124")
+    @Expose
+    private String field124;
     @SerializedName("field_128")
     @Expose
     private String field128;
@@ -343,7 +358,7 @@ public class POSData {
     }
 
     public String getField54() {
-        return field53;
+        return field54;
     }
 
     public void setField54(String field54) {
@@ -358,12 +373,36 @@ public class POSData {
     this.field55 = field55;
     }
 
+    public String getField56() {
+        return field56;
+    }
+
+    public void setField56(String field56) {
+        this.field56 = field56;
+    }
+
     public String getField59() {
         return field59;
     }
 
     public void setField59(String field59) {
         this.field59 = field59;
+    }
+
+    public String getField60() {
+        return field60;
+    }
+
+    public void setField60(String field60) {
+        this.field60 = field60;
+    }
+
+    public String getField62() {
+        return field62;
+    }
+
+    public void setField62(String field62) {
+        this.field62 = field62;
     }
 
     public String getField63() {
@@ -398,12 +437,28 @@ public class POSData {
         this.field95 = field95;
     }
 
+    public String getField100() {
+        return field100;
+    }
+
+    public void setField100(String field100) {
+        this.field100 = field100;
+    }
+
     public String getField123() {
     return field123;
     }
 
     public void setField123(String field123) {
     this.field123 = field123;
+    }
+
+    public String getField124() {
+        return field124;
+    }
+
+    public void setField124(String field124) {
+        this.field124 = field124;
     }
 
     public String getField128() {

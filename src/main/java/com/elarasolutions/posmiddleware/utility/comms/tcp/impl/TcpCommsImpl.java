@@ -109,10 +109,10 @@ public class TcpCommsImpl implements TcpComms {
             notifyStatus(2, null);
             socket.send(senddata);
             notifyStatus(3, null);
-            if (true)
+//            if (true)
                 recv();
-            else
-                recvWithHeader();
+//            else
+//                recvWithHeader();
         } catch (ConnectException var10) {
             var10.printStackTrace();
             throw var10;
@@ -136,10 +136,10 @@ public class TcpCommsImpl implements TcpComms {
                     notifyStatus(2, null);
                     socket.send(senddata);
                     notifyStatus(3, null);
-                    if (true)
+//                    if (true)
                         recv();
-                    else
-                        recvWithHeader();
+//                    else
+//                        recvWithHeader();
                 } catch (ConnectException var10) {
                     var10.printStackTrace();
                     notifyErrorCode(var10.getErrorCode(), var10.getMessage());
@@ -182,10 +182,10 @@ public class TcpCommsImpl implements TcpComms {
         try {
             sslSocket.connect();
             sslSocket.send(senddata);
-            if (true)
+//            if (true)
                 recvSSL();
-            else
-                recvSSLWithHeader();
+//            else
+//                recvSSLWithHeader();
         } catch (ConnectException var10) {
             var10.printStackTrace();
             this.commsListener.OnError(1, "Timeout");
@@ -216,10 +216,10 @@ public class TcpCommsImpl implements TcpComms {
                                 notifyStatus(3, null);
                                 ifContinueRecv = true;
                                 finish = 3;
-                                if (true)
+//                                if (true)
                                     recvSSL();
-                                else
-                                    recvSSLWithHeader();
+//                                else
+//                                    recvSSLWithHeader();
                             } catch (ConnectException var10) {
                                 var10.printStackTrace();
                                 TcpCommsImpl.this.notifyErrorCode(var10.getErrorCode(), var10.getMessage());
