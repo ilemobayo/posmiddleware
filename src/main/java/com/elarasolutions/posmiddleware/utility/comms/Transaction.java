@@ -42,7 +42,7 @@ public class Transaction {
             System.setProperty("jdk.tls.disabledAlgorithms", "SSLv3, DHE");
             */
 
-            System.setProperty("javax.net.debug", "all");
+            System.setProperty("javax.net.debug", "none");
 
             /*
             X509TrustManager tm = new X509TrustManager() {
