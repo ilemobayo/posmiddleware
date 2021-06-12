@@ -36,13 +36,9 @@ public class ISODataUtils {
     }
 
     public POSData sendIsoRequest(POSDataPacked data) throws Exception {
-        //NIBSS
-//        host = "196.6.103.72";
-//        port = 5042;
         byte[] dataBytes = data.getMsg().getBytes();
         IsoMessage isoResponseMessage;
         try {
-            //sendPingRequest(host);
             isoResponseMessage = Transaction.sendRequest(data.getHost(), data.getPort(), data.isSsl(), dataBytes);
             return buildISOJsonData(isoResponseMessage);
         } catch (Exception ex){
