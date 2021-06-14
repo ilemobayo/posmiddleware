@@ -37,7 +37,7 @@ public class ISODataUtils {
          * Convert iso data gotten from the request body to POSData
          * for merchant, terminal and access bank card holder management
          */
-        unpack(data.getMsg());
+        Utils.unpack(dataBytes);
         //parseData(dataBytes);
         /*
          * Send transaction iso8583 data bytes to the switch for processing
@@ -126,33 +126,6 @@ public class ISODataUtils {
             }
         }
         return posData;
-    }
-
-    public void unpack(String isoMessage) throws ISOException, IOException {
-        // Initialize packager. in this example, I'm using
-        // XML packager. We also can use Java Code Packager
-        // This code throws ISOException
-        GenericPackager packager = new GenericPackager(Utils.getFile("packager/POS_PACKAGER.xml"));
-
-        // Setting packager
-        ISOMsg isoMsg = new ISOMsg();
-        isoMsg.setPackager(packager);
-
-        // first, we must convert ISO8583 Message String to byte[]
-        byte[] bIsoMessage = new byte[isoMessage.length()];
-        for (int i = 0; i < bIsoMessage.length; i++) {
-            bIsoMessage[i] = (byte) (int) isoMessage.charAt(i);
-        }
-
-        // second, we unpack the message
-        isoMsg.unpack(isoMessage.getBytes());
-
-        // last, print the unpacked ISO8583
-        System.out.println("MTI='"+isoMsg.getMTI()+"'");
-        for(int i=1; i<=isoMsg.getMaxField(); i++){
-            if(isoMsg.hasField(i))
-                System.out.println(i+"='"+isoMsg.getString(i)+"'");
-        }
     }
 
 }

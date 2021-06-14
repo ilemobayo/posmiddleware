@@ -648,7 +648,7 @@
             class="org.jpos.iso.IFA_LLLCHAR"/>
     <isofield
             id="128"
-            length="8"
+            length="64"
             name="MAC 2"
-            class="org.jpos.iso.IFA_BINARY"/>
+            class="org.jpos.iso.IFA_NUMERIC"/>
 </isopackager>

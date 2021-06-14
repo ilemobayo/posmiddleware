@@ -6,6 +6,9 @@ import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.MessageFactory;
 import com.solab.iso8583.parse.ConfigParser;
 import com.solab.iso8583.util.HexCodec;
+import org.jpos.iso.ISOException;
+import org.jpos.iso.ISOMsg;
+import org.jpos.iso.packager.GenericPackager;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -231,14 +234,9 @@ public class Utils {
      * @return IsoMessage
      */
     public IsoMessage decode(byte[] data) {
-        byte[] testbyte = data;
-        List arrList = new ArrayList<>();
-        int j = 0;
-        for(byte b:testbyte){
-            System.out.println("[" + j++ + ", " + b + "]");
-        }
         try{
             IsoMessage isoMessage = messageFactory.parseMessage(data, 0);
+            unpack(data);
             dumpIsoMessages(isoMessage, false);
             return isoMessage;
         } catch(Exception ex){
@@ -268,6 +266,24 @@ public class Utils {
         } catch (Exception ex) {
             isoString.append("============================================\n");
             ex.printStackTrace();
+        }
+    }
+
+    public static void unpack(byte[] isoMessage) throws ISOException, IOException {
+        // Initialize packager. in this example, I'm using
+        // XML packager. We also can use Java Code Packager
+        // This code throws ISOException
+        GenericPackager packager = new GenericPackager(Utils.getFile("packager/POS_PACKAGER.xml"));
+        // Setting packager
+        ISOMsg isoMsg = new ISOMsg();
+        isoMsg.setPackager(packager);
+        // second, we unpack the message
+        isoMsg.unpack(isoMessage);
+        // last, print the unpacked ISO8583
+        System.out.println("ISO8583: MTI => " + isoMsg.getMTI());
+        for(int i=1; i<=isoMsg.getMaxField(); i++){
+            if(isoMsg.hasField(i))
+                System.out.println("Field " + i+ "  => " + isoMsg.getString(i));
         }
     }
 }
