@@ -4,10 +4,9 @@ import com.elarasolutions.posmiddleware.utility.Utils;
 import com.solab.iso8583.IsoMessage;
 
 import javax.net.ssl.*;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -20,49 +19,7 @@ public class Transaction {
         DataOutputStream dataOutputStream = null;
 
         if(ssl){
-            /*
-            String certfile = "/Users/lekanomotayo/projects/phoenix/comodo.crt";
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            FileInputStream fis = new FileInputStream(certfile);
-            DataInputStream dis = new DataInputStream(fis);
-            byte[] bytes = new byte[dis.available()];
-            dis.readFully(bytes);
-            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-            InputStream certstream = bais;
-            Certificate certs =  cf.generateCertificate(certstream);
-            String keystoreFilename = "/Users/lekanomotayo/projects/phoenix/keystore.jks";
-            String keystorePwd = "password";
-            createKeystoreWithCert(keystoreFilename, keystorePwd, "nibss", certs);
-            //keystoreFilename = "/Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/jre/lib/security/cacerts";
-            //keystorePwd = "changeit";
-            System.setProperty("javax.net.ssl.trustStore", keystoreFilename);
-            System.setProperty("javax.net.ssl.trustStorePassword", keystorePwd);
-            System.setProperty("javax.net.ssl.keyStore", keystoreFilename);
-            System.setProperty("javax.net.ssl.keyStorePassword", keystorePwd);
-            System.setProperty("jdk.tls.disabledAlgorithms", "SSLv3, DHE");
-            */
-
             System.setProperty("javax.net.debug", "none");
-
-            /*
-            X509TrustManager tm = new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-                }
-                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-                }
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-            SSLContext ctx = SSLContext.getInstance("TLS");
-            ctx.init(null, new TrustManager[]{tm}, null);
-            */
-            /*
-            SSLSocketFactory factory= (SSLSocketFactory) SSLSocketFactory.getDefault();
-            SSLSocket socket = (SSLSocket) factory.createSocket(host,port);
-            dataInputStream = new DataInputStream(socket.getInputStream());
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            */
 
             TrustManager tm = new X509TrustManager() {
                 @Override
@@ -137,27 +94,6 @@ public class Transaction {
         IsoMessage isoMessageResponse = new Utils().decode(resp);
         System.out.println("Response: \n" + isoMessageResponse.debugString());
         return isoMessageResponse;
-    }
-
-    private static void createKeystoreWithCert(String filename, String pwd, String alias, Certificate certs) {
-
-        try{
-            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-            char[] password = pwd.toCharArray();
-            //ks.load(null, password);
-            ks.load(null, null);
-            FileOutputStream fos = new FileOutputStream(filename);
-            ks.store(fos, password);
-            fos.close();
-
-            ks.setCertificateEntry(alias, certs);
-            FileOutputStream out = new FileOutputStream(filename);
-            ks.store(out, password);
-            out.close();
-        }
-        catch(Exception ex){
-
-        }
     }
 
     private static byte [] concat(byte[] A, byte[] B) {

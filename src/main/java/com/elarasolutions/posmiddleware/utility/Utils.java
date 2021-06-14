@@ -1,5 +1,6 @@
 package com.elarasolutions.posmiddleware.utility;
 
+import com.elarasolutions.posmiddleware.PosmiddlewareApplication;
 import com.elarasolutions.posmiddleware.model.POSData;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.MessageFactory;
@@ -9,9 +10,12 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -20,14 +24,20 @@ public class Utils {
     public Utils(){
         try {
             messageFactory = getIsoMessageFactory();
+            System.out.println("Utils: messageFactory initialization success");
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Utils: messageFactory initialization failed");
         }
     }
 
     private String loadPackagerFile() throws IOException {
         File resource = new ClassPathResource("packager/NCS_PACKAGER.xml").getFile();
         return new String(Files.readAllBytes(resource.toPath()));
+    }
+
+    public static InputStream getFile(String filename)throws IOException{
+        return PosmiddlewareApplication.class.getClassLoader().getResource(filename).openStream();
     }
 
     private MessageFactory<IsoMessage> getIsoMessageFactory() throws IOException {
@@ -45,12 +55,14 @@ public class Utils {
         return messageFactory;
     }
 
+    /**
+     * Convert POSData object into ISO8583 data
+     * @param data POSData object
+     * @return IsoMessage Object
+     * @throws Exception
+     */
     public IsoMessage createIsoRequest(POSData data) throws Exception {
-        System.out.println("Msg Type: "+data.getMsgType());
         int type = Integer.parseInt(data.getMsgType(), 16);
-        type = 0x200;
-        System.out.println("Type: "+type);
-        System.out.println("F55: "+data.getField55());
         IsoMessage message = messageFactory.newMessage(type);
         IsoMessage templ = messageFactory.getMessageTemplate(type);
         if (!StringUtil.isEmpty(data.getField2())) {
@@ -213,7 +225,18 @@ public class Utils {
         return message;
     }
 
+    /**
+     * Helps decode byte array of data into IsoMessage
+     * @param data byte array representation of Iso8583
+     * @return IsoMessage
+     */
     public IsoMessage decode(byte[] data) {
+        byte[] testbyte = data;
+        List arrList = new ArrayList<>();
+        int j = 0;
+        for(byte b:testbyte){
+            System.out.println("[" + j++ + ", " + b + "]");
+        }
         try{
             IsoMessage isoMessage = messageFactory.parseMessage(data, 0);
             dumpIsoMessages(isoMessage, false);
@@ -224,6 +247,11 @@ public class Utils {
         return null;
     }
 
+    /**
+     * Helps in debugging both request and response
+     * @param message an IsoMessage 8583 Data
+     * @param isRequest set if the message is a request or response
+     */
     private static void dumpIsoMessages(IsoMessage message, boolean isRequest) {
         StringBuilder isoString = new StringBuilder();
         isoString.append("============================================\n");

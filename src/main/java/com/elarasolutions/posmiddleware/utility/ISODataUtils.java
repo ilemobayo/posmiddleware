@@ -6,10 +6,11 @@ import com.elarasolutions.posmiddleware.utility.comms.Transaction;
 import com.elarasolutions.posmiddleware.utility.comms.tcp.TcpComms;
 import com.elarasolutions.posmiddleware.utility.comms.tcp.impl.TcpCommsImpl;
 import com.solab.iso8583.IsoMessage;
+import org.jpos.iso.ISOException;
+import org.jpos.iso.ISOMsg;
+import org.jpos.iso.packager.GenericPackager;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class ISODataUtils {
 
@@ -21,11 +22,6 @@ public class ISODataUtils {
     public POSData sendIsoRequest(POSData data) throws Exception {
         String host = "arca-pos.qa.arca-payments.network";
         int port = 11000;
-        //NIBSS
-//        host = "196.6.103.72";
-//        port = 5042;
-        // nc -vz arca-pos.qa.arca-payments.network 11000
-        // nc -vz 196.6.103.72 5042
         byte[] dataBytes = createRequest(data);
         //sendPingRequest(host);
         TcpComms comms = new TcpCommsImpl(host, port, 60, false, null);
@@ -37,9 +33,17 @@ public class ISODataUtils {
 
     public POSData sendIsoRequest(POSDataPacked data) throws Exception {
         byte[] dataBytes = data.getMsg().getBytes();
-        IsoMessage isoResponseMessage;
+        /*
+         * Convert iso data gotten from the request body to POSData
+         * for merchant, terminal and access bank card holder management
+         */
+        unpack(data.getMsg());
+        //parseData(dataBytes);
+        /*
+         * Send transaction iso8583 data bytes to the switch for processing
+         */
         try {
-            isoResponseMessage = Transaction.sendRequest(data.getHost(), data.getPort(), data.isSsl(), dataBytes);
+            IsoMessage isoResponseMessage = Transaction.sendRequest(data.getHost(), data.getPort(), data.isSsl(), dataBytes);
             return buildISOJsonData(isoResponseMessage);
         } catch (Exception ex){
             ex.printStackTrace();
@@ -47,21 +51,15 @@ public class ISODataUtils {
         }
     }
 
-    // Sends ping request to a provided IP address
-    public static void sendPingRequest(String ipAddress)
-            throws UnknownHostException, IOException
-    {
-        InetAddress geek = InetAddress.getByName(ipAddress);
-        System.out.println("Sending Ping Request to " + ipAddress);
-        if (geek.isReachable(5000))
-            System.out.println("Host is reachable");
-        else
-            System.out.println("Sorry ! We can't reach to this host");
+
+    private POSData parseData(byte[] posdata) {
+        Utils utils = new Utils();
+        IsoMessage isoMessage = utils.decode(posdata);
+        return buildISOJsonData(isoMessage);
     }
 
     private POSData buildISOJsonData(IsoMessage message){
         POSData posData = new POSData();
-        posData.setMsgType(message.getIsoHeader());
         for (int i = 0; i <= 128; i++) {
             if (message.hasField(i)) {
                 if (i == 2) {
@@ -128,6 +126,33 @@ public class ISODataUtils {
             }
         }
         return posData;
+    }
+
+    public void unpack(String isoMessage) throws ISOException, IOException {
+        // Initialize packager. in this example, I'm using
+        // XML packager. We also can use Java Code Packager
+        // This code throws ISOException
+        GenericPackager packager = new GenericPackager(Utils.getFile("packager/POS_PACKAGER.xml"));
+
+        // Setting packager
+        ISOMsg isoMsg = new ISOMsg();
+        isoMsg.setPackager(packager);
+
+        // first, we must convert ISO8583 Message String to byte[]
+        byte[] bIsoMessage = new byte[isoMessage.length()];
+        for (int i = 0; i < bIsoMessage.length; i++) {
+            bIsoMessage[i] = (byte) (int) isoMessage.charAt(i);
+        }
+
+        // second, we unpack the message
+        isoMsg.unpack(isoMessage.getBytes());
+
+        // last, print the unpacked ISO8583
+        System.out.println("MTI='"+isoMsg.getMTI()+"'");
+        for(int i=1; i<=isoMsg.getMaxField(); i++){
+            if(isoMsg.hasField(i))
+                System.out.println(i+"='"+isoMsg.getString(i)+"'");
+        }
     }
 
 }
