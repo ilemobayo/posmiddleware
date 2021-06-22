@@ -312,7 +312,6 @@
             length="9999"
             name="NEAR FIELD COMMUNICATION DATA"
             class="org.jpos.iso.IFA_LLLLCHAR"/>
-
     <isofield
             id="128"
             length="32"

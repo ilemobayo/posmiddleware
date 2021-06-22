@@ -2,6 +2,7 @@ package com.elarasolutions.posmiddleware.controller;
 
 import com.elarasolutions.posmiddleware.model.POSData;
 import com.elarasolutions.posmiddleware.model.POSDataPacked;
+import com.elarasolutions.posmiddleware.model.POSDataPackedResponse;
 import com.elarasolutions.posmiddleware.utility.ISODataUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,16 @@ public class TransactionController {
         } catch (Exception e) {
             e.printStackTrace();
             return new POSData();
+        }
+    }
+
+    @PostMapping("/transaction/new")
+    POSDataPackedResponse packedISONew(@RequestBody POSDataPacked data) {
+        try {
+            return new ISODataUtils().sendIsoRequestNew(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new POSDataPackedResponse();
         }
     }
 
