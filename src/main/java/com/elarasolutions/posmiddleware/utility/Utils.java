@@ -58,6 +58,25 @@ public class Utils {
         return messageFactory;
     }
 
+    public byte[] echoRequest() throws Exception {
+        String stanStr = "000216";
+        String transDatetime = "1028202726"; //getDateTimeMMddhhmmss(now);
+        String timelocal = "202726"; //getTimehhmmss(now);
+        String datelocal = "1028"; //getDateMMdd(now);
+        int type = Integer.parseInt("0800", 16);
+        IsoMessage message = messageFactory.newMessage(type);
+        IsoMessage templ = messageFactory.getMessageTemplate(type);
+        message.setValue(3, "9A0000", templ.getField(3).getType(), templ.getField(3).getLength()); // LLVAR
+        message.setValue(7, transDatetime, templ.getField(7).getType(), templ.getField(7).getLength());
+        message.setValue(11, stanStr, templ.getField(11).getType(), templ.getField(11).getLength());
+        message.setValue(12, timelocal, templ.getField(12).getType(), templ.getField(12).getLength());
+        message.setValue(13, datelocal, templ.getField(13).getType(), templ.getField(13).getLength());
+        message.setValue(41, "20584535", templ.getField(41).getType(), templ.getField(41).getLength());
+//        message.setValue(63, mgtData2, templ.getField(63).getType(), mgtData2.length());
+//        message.setValue(64, new String(new byte[]{0x0}), templ.getField(64).getType(), templ.getField(64).getLength());
+        return message.writeData();
+    }
+
     /**
      * Convert POSData object into ISO8583 data
      * @param data POSData object

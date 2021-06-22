@@ -14,11 +14,6 @@ import java.io.IOException;
 
 public class ISODataUtils {
 
-    private byte[] createRequest(POSData data) throws Exception{
-        IsoMessage message = new Utils().createIsoRequest(data);
-        return message.writeData();
-    }
-
     public POSData sendIsoRequest(POSData data) throws Exception {
         String host = "arca-pos.qa.arca-payments.network";
         int port = 11000;
@@ -33,6 +28,7 @@ public class ISODataUtils {
 
     public POSData sendIsoRequest(POSDataPacked data) throws Exception {
         byte[] dataBytes = data.getMsg().getBytes();
+//        byte[] dataBytes = new Utils().echoRequest();
         /*
          * Convert iso data gotten from the request body to POSData
          * for merchant, terminal and access bank card holder management
@@ -45,17 +41,21 @@ public class ISODataUtils {
         try {
             IsoMessage isoResponseMessage = Transaction.sendRequest(data.getHost(), data.getPort(), data.isSsl(), dataBytes);
             return buildISOJsonData(isoResponseMessage);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return new POSData();
         }
     }
 
-
     private POSData parseData(byte[] posdata) {
         Utils utils = new Utils();
         IsoMessage isoMessage = utils.decode(posdata);
         return buildISOJsonData(isoMessage);
+    }
+
+    private byte[] createRequest(POSData data) throws Exception{
+        IsoMessage message = new Utils().createIsoRequest(data);
+        return message.writeData();
     }
 
     private POSData buildISOJsonData(IsoMessage message){
@@ -127,5 +127,4 @@ public class ISODataUtils {
         }
         return posData;
     }
-
 }

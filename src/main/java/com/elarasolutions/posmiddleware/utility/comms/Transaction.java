@@ -50,18 +50,12 @@ public class Transaction {
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
         }
 
-        //int lenght = rawMsg.length;
-        int reqLen = data.length;byte[] bLenght = new byte[2];
+        int reqLen = data.length;
+        byte[] bLenght = new byte[2];
         bLenght[1] = (byte) reqLen; // (lenght & 0xFF);
         bLenght[0] = (byte) (reqLen >> 8); // ((lenght >> 8) & 0xFF);
         byte[] toSend = concat(bLenght, data);
-        /*
-        int headerreq = reqLen >> 8;
-        dataOutputStream.write(headerreq);
-        dataOutputStream.write(reqLen);
-        */
 
-        //dataOutputStream.write(toSend);
         dataOutputStream.write(toSend, 0, toSend.length);
         dataOutputStream.flush();
 
@@ -70,25 +64,6 @@ public class Transaction {
         int respLen = (int) (((((int)header[0]) & 0xFF) << 8) | (((int)header[1]) & 0xFF));
         byte[] resp = new byte[respLen];
         dataInputStream.readFully(resp, 0, respLen);
-
-
-        /*
-        byte [] buffer  = new byte[1024];
-        int count = 0;
-        while( dataInputStream.available() > 0)
-        {
-            buffer [count++] = dataInputStream.readByte();
-            if(count>= buffer.length-1){
-                resize(buffer);
-            }
-        }
-        byte [] returnbuffer =  new byte[count-2];
-        System.arraycopy(buffer,2,returnbuffer,0,count-2);
-        int available = dataInputStream.available();
-        if (available > 0) {
-            int read = dataInputStream.read(buffer);
-        }
-        */
 
         System.out.println("Response form server: " + Arrays.toString(resp));
         IsoMessage isoMessageResponse = new Utils().decode(resp);
