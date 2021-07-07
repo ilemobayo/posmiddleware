@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE j8583-config PUBLIC "-//J8583//DTD CONFIG 1.0//EN"
         "http://j8583.sourceforge.net/j8583.dtd" >
-
 <j8583-config>
 
     <!-- The system uses this to create outgoing requests -->
@@ -45,8 +44,8 @@
         <field num="124" type="LLLLVAR" length="9999"/>
         <field num="128" type="ALPHA"  length="64"/>
     </template>
-    <template type="0101" extends="0100"/>
 
+    <template type="0101" extends="0100"/>
 
     <template type="0120" extends="0100">
         <field num="29" type="ALPHA" length="9"/>
@@ -66,11 +65,13 @@
         <field num="103" type="LLVAR"  length="28"/>
         <field num="128" type="ALPHA"  length="64"/>
     </template>
+
     <template type="0121" extends="0120"/>
 
-
     <template type="0200" extends="0100"/>
+
     <template type="0201" extends="0200"/>
+
     <template type="0500" extends="0200">
         <field num="15" type="NUMERIC" length="4"/>
         <field num="50" type="NUMERIC" length="3" />
@@ -84,8 +85,8 @@
         <field num="89" type="NUMERIC" length="16"/>
         <field num="97" type="ALPHA" length="17"/>
     </template>
-    <template type="0320" extends="0200"/>
 
+    <template type="0320" extends="0200"/>
 
     <template type="0220" extends="0200">
         <field num="9" type="NUMERIC" length="8"/>
@@ -103,8 +104,8 @@
         <field num="102" type="LLVAR"  length="28"/>
         <field num="103" type="LLVAR"  length="28"/>
     </template>
-    <template type="0221" extends="0220"/>
 
+    <template type="0221" extends="0220"/>
 
     <template type="0420" extends="0200">
         <field num="30" type="ALPHA" length="9" />
@@ -114,6 +115,7 @@
         <field num="90" type="NUMERIC" length="42" />
         <field num="95" type="NUMERIC" length="42" />
     </template>
+
     <template type="0421" extends="0420"/>
 
     <template type="0800">
@@ -135,8 +137,6 @@
         <field num="53" type="BINARY" length="24" />
     </template>
 
-
-
     <!-- The system uses this to read the incoming requests -->
     <!-- Request message -->
     <parse type="0800">
@@ -150,7 +150,6 @@
         <field num="63" type="LLLLVAR" length="9999" />
         <field num="64" type="ALPHA" length="64" />
     </parse>
-
 
     <!-- Response message -->
     <parse type="0110">
@@ -195,7 +194,6 @@
         <field num="128" type="ALPHA"  length="64"/>
     </parse>
 
-
     <parse type="0130" extends="0110">
         <field num="9" type="NUMERIC" length="8"/>
         <field num="29" type="ALPHA" length="9"/>
@@ -208,11 +206,9 @@
         <field num="90" type="NUMERIC" length="42" />
     </parse>
 
-
     <parse type="0210" extends="0110">
         <field num="56" type="LLLVAR" />
     </parse>
-
 
     <parse type="0230" extends="0210">
         <field num="9" type="NUMERIC" length="8"/>
@@ -223,7 +219,6 @@
         <field num="50" type="NUMERIC" length="3" />
     </parse>
 
-
     <parse type="0430" extends="0210">
         <field num="55" type="exclude" />
         <field num="60" type="exclude" />
@@ -233,8 +228,8 @@
 
     <parse type="0510" extends="0210">
         <field num="15" type="NUMERIC" length="4"/>
-        <field num="50" type="NUMERIC" length="3" />
-        <field num="63" type="LLLLVAR" length="9999"  />
+        <field num="50" type="NUMERIC" length="3"/>
+        <field num="63" type="LLLLVAR" length="9999"/>
         <field num="74" type="NUMERIC" length="10"/>
         <field num="75" type="NUMERIC" length="10"/>
         <field num="76" type="NUMERIC" length="10"/>
@@ -245,6 +240,7 @@
         <field num="89" type="NUMERIC" length="16"/>
         <field num="97" type="ALPHA" length="17"/>
     </parse>
+
     <parse type="0320" extends="0510"/>
 
     <parse type="0810" extends="0800">
@@ -252,6 +248,5 @@
         <field num="39" type="ALPHA" length="2" />
         <field num="53" type="BINARY" length="24" />
     </parse>
-
 
 </j8583-config>
